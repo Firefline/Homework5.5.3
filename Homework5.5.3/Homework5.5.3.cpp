@@ -3,45 +3,20 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 
 class functor
 {
-protected:
-    std::vector<int> arr;
-    int sum = 0;
-    int count = 0;
 public:
-    functor(std::vector<int>arr) 
+    int count = 0;
+    int sum = 0;
+    void operator()(int a)
     {
-        this->arr = arr;
-    };
-    std::vector<int> operator()()
-    {
-        return this->arr;
-    }
-    int get_sum()
-    {
-        this->arr = arr;
-        for (int a = 0; a < arr.size(); ++a)
+        if (a % 3 == 0)
         {
-            if (arr[a] % 3 == 0)
-            {
-                sum = sum + arr[a];
-            }
+            ++count;
+            sum += a;
         }
-        return sum;
-    }
-    int get_count()
-    {
-        this->arr = arr;
-        for (int a = 0; a < arr.size(); ++a)
-        {
-            if (arr[a] % 3 == 0)
-            {
-                ++count;
-            }
-        }
-        return count;
     }
 };
 
@@ -49,19 +24,16 @@ int main(int argc, char** argv)
 {
     setlocale(LC_ALL, "Russian");
 
-    std::vector<int> arr{ 4, 1, 3, 6, 25, 54 };
-
-    functor func(arr);
+    std::vector<int> arr{4, 1, 3, 6, 25, 54};
 
     std::cout << "[IN]: ";
-    for (int a = 0; a < arr.size(); ++a)
-    {
-        std::cout << arr[a] << " ";
-    }
+    std::for_each(arr.begin(), arr.end(), [](const int a) { std::cout << a << " "; });
     std::cout << std::endl;
-
-    std::cout << "[OUT]: get_sum() = " << func.get_sum() << std::endl;
-    std::cout << "[OUT]: get_count() = " << func.get_count() << std::endl;
+    
+    functor func = std::for_each(arr.begin(), arr.end(), functor());
+    std::cout << "[OUT]: get_sum() = " << func.sum << " ";
+    std::cout << std::endl;
+    std::cout << "[OUT]: get_count() = " << func.count << " ";
 
     return 0;
 }
